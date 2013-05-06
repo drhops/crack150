@@ -1,6 +1,12 @@
 (ns crack.core-test
   (:use clojure.test
-        crack.core))
+        crack.core
+        clojure.core.matrix
+        clojure.core.matrix.operators)
+  (:refer-clojure :exclude [* - + == /])
+)
+
+(set-current-implementation :vectorz)
 
 (deftest a-test
   (testing "c1"
@@ -21,4 +27,17 @@
     (is (= "wo%20o%20t" (p1-5 "wo o t")))
     (is (= "%20%20%20x" (p1-5 "   x")))
     (is (= "noop" (p1-5 "noop")))
+    ; p1-6
+    (is (= (matrix [[3 1] [4 2]]) (p1-6 (matrix [[1 2] [3 4]]))))
+    (is (= (matrix [[13 9 5 1] [14 10 6 2] [15 11 7 3] [16 12 8 4]])
+           (p1-6 (matrix [[1 2 3 4] [5 6 7 8] [9 10 11 12] [13 14 15 16]]))))
+    ; p1-7
+    (is (= (matrix [[1 0] [0 0]]) (p1-7 (matrix [[1 2] [3 0]]))))
+    (is (= (matrix [[0 0 0 0] [0 6 7 8] [0 10 11 12] [0 14 15 16]])
+           (p1-7 (matrix [[0 2 0 4] [5 6 7 8] [0 10 11 12] [13 14 15 16]]))))
+    ; p1-8
+    (is (= true (p1-8 "test" "test")))
+    (is (= true (p1-8 "test" "stte")))
+    (is (= true (p1-8 "erbottlewat" "waterbottle")))
+    (is (= false (p1-8 "xerbottlewat" "waterbottle")))
     ))
