@@ -1,6 +1,6 @@
-(ns crack.core-test
+(ns crack.arrays_and_strings-test
   (:use clojure.test
-        crack.core
+        crack.arrays_and_strings
         clojure.core.matrix
         clojure.core.matrix.operators)
   (:refer-clojure :exclude [* - + == /])
@@ -9,7 +9,7 @@
 (set-current-implementation :vectorz)
 
 (deftest a-test
-  (testing "c1"
+  (testing "ch.1: arrays and strings"
     ; p1-1
     (is (= false (p1-1 "test")))
     (is (= true (p1-1 "pearl")))
