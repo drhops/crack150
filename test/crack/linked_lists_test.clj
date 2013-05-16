@@ -1,5 +1,5 @@
 (ns crack.linked_lists-test
-  (:import (crack.linked_lists LLNode))
+  (:import (crack.data_structures LLNode))
   (:use clojure.test
         crack.linked_lists))
 
@@ -69,5 +69,37 @@
       (is (= nil (ll-index ll1 2)))
       (is (= 11 (.getValue (ll-index ll1 1))))
       )
-    ;
+    ; p2-4
+    (let [x1 (LLNode. 5)
+          x2 (LLNode. 8)
+          x3 (LLNode. 7)
+          y1 (LLNode. 4)
+          y2 (LLNode. 4)
+          y3 (LLNode. 1)]
+      (.setNext x1 x2)
+      (.setNext x2 x3)
+      (.setNext y1 y2)
+      (.setNext y2 y3)
+      ; 144 + 785 = 929
+      (let [z1 (p2-4 x1 y1)
+            z2 (.getNext z1)
+            z3 (.getNext z2)]
+        (is (= 9 (.getValue z1)))
+        (is (= 2 (.getValue z2)))
+        (is (= 9 (.getValue z3)))
+        ))
+    ; p2-5
+    (let [A (LLNode. 5)
+          B (LLNode. 8)
+          C (LLNode. 13)
+          D (LLNode. 6)
+          E (LLNode. 2)
+          ]
+      (.setNext A B)
+      (.setNext B C)
+      (.setNext C D)
+      (.setNext D E)
+      (.setNext E C)
+      (is (= C (p2-5 A)))
+      )
     ))
