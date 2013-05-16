@@ -1,7 +1,7 @@
 (ns crack.linked_lists)
 
 (gen-class
-  :name crack.linked_lists.LinkedList
+  :name crack.linked_lists.LLNode
   :init init
   :constructors {["java.lang.Object"] []}
   :methods [[getNext [] Object]
@@ -74,3 +74,36 @@
       (recur (.getNext n)))
     )
   node)
+
+(defn ll-index
+  [node x]
+  (loop [n node
+         i 0]
+    (if (or (nil? n) (= i x))
+      n
+      (recur (.getNext n) (+ i 1))
+    )))
+
+(defn p2-2
+  "Implement an algorithm to find the nth to last element of a singly linked list."
+  [node x]
+  (loop [n node
+         nx (ll-index n x)]
+    (if (nil? nx)
+      n
+      (recur (.getNext n) (.getNext nx))
+      )))
+
+(defn p2-3
+  "Implement an algorithm to delete a node in the middle of a single linked list, given
+only access to that node.
+EXAMPLE
+Input: the node ‘c’ from the linked list a->b->c->d->e
+Result: nothing is returned, but the new linked list looks like a->b->d->e
+"
+  [node]
+  (if-not (nil? (.getNext node))
+    (.setValue node (.getValue (.getNext node))))
+  (.setNext node (ll-index node 2))
+  node
+  )
