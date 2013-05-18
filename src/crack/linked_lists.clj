@@ -1,9 +1,7 @@
-(ns crack.linked_lists
-    (:import (crack.data_structures LLNode))
-    )
+(ns crack.linked_lists)
 
 (gen-class
-  :name crack.data_structures.LLNode
+  :name crack.linked_lists.LLNode
   :init init
   :constructors {["java.lang.Object"] []}
   :methods [[getNext [] Object]
@@ -36,6 +34,9 @@
 
 (defn -setValue [this value]
   (setfield this :value value))
+
+;;
+(import 'crack.linked_lists.LLNode)
 
 ;; helpers
 (defn ll-all [node]
