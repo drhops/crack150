@@ -1,5 +1,5 @@
 (ns crack.linked_lists-test
-  (:import (crack.data_structures LLNode))
+  (:import (crack.linked_lists LLNode))
   (:use clojure.test
         crack.linked_lists))
 

@@ -7,4 +7,5 @@
                  [net.mikera/core.matrix "0.7.0"]
                  [net.mikera/vectorz-clj "0.9.0"]]
   :main crack.core
-  :aot [crack.data_structures])
+  :aot [crack.data_structures
+        crack.stacks_and_queues])
