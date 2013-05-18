@@ -5,7 +5,12 @@
   (push [this v])
   (pop [this])
   (peek [this])
-  (size [this]))
+  (size [this])
+  (popAt [this i])
+  )
+
+;;(defprotocol PoppableByIndex
+;;  (popAt [this i]))
 
 (deftype Stack [stack]
   PStack
@@ -22,7 +27,11 @@
     (first @stack))
   (size
     [this]
-    (count @stack)))
+    (count @stack))
+  (popAt
+    [this i]
+    nil)
+  )
 
 ;;
 (import 'crack.stacks_and_queues.Stack)
@@ -32,6 +41,7 @@
   (Stack. (atom '()))
   )
 
+;; p3-3
 (deftype StackOfStacks [stacks stack-limit]
   PStack
   (push
@@ -63,7 +73,18 @@
           remaining (if (nil? topstack) 0 (- stack-limit (.size topstack)))]
       (- capacity remaining)
     ))
+  ;; PoppableByIndex  ;; p3-3b
+  (popAt  ;; breaks .size
+    [this i]
+    (let [revstacks (stack)]
+      (doseq [x (range 0 i)]
+        (.push revstacks (.pop @stacks)))
+      (let [ret (.pop this)]
+        (doseq [x (range 0 i)]
+          (.push @stacks (.pop revstacks)))
+        ret)))
   )
+
 
 ;;
 (import 'crack.stacks_and_queues.StackOfStacks)
@@ -98,14 +119,14 @@ behave identically to a single stack (that is, pop() should return the same valu
 would if there were just a single stack).
 "
   []
-  )
+  (sstack 10))
 
 (defn p3-3b
   "FOLLOW UP
 Implement a function popAt(int index) which performs a pop operation on a specific
 sub-stack."
   []
-  )
+  (sstack 10))
 
 (defn p3-4
   "In the classic problem of the Towers of Hanoi, you have 3 rods and N disks of different

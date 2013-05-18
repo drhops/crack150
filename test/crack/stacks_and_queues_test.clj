@@ -20,7 +20,7 @@
       (is (= nil (.peek s)))
       (is (= nil (.pop s)))
       )
-    ;; StackOfStacks
+    ;; p3.3 StackOfStacks
     (let [ss (sstack 2)]
       (.push ss 1)
       (is (= 1 (.peek ss)))
@@ -39,5 +39,15 @@
       (is (= nil (.peek ss)))
       (is (= nil (.pop ss)))
       (is (= 0 (.size ss)))
+      )
+    ;; p3.3b StackOfStacks
+    (let [ss (sstack 2)]
+      (.push ss 1)
+      (.push ss 5)
+      (.push ss 13)
+      (.push ss 9)
+      (.push ss 8)
+      (is (= 9 (.popAt ss 1)))
+      (is (= 5 (.popAt ss 2)))
       )
     ))
