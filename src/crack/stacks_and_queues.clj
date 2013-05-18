@@ -1,5 +1,79 @@
 (ns crack.stacks_and_queues)
 
+;; data structures
+(defprotocol PStack
+  (push [this v])
+  (pop [this])
+  (peek [this])
+  (size [this]))
+
+(deftype Stack [stack]
+  PStack
+  (push
+    [this x]
+    (swap! stack conj x))
+  (pop
+    [this]
+    (let [first (first @stack)]
+      (swap! stack rest)
+      first))
+  (peek
+    [this]
+    (first @stack))
+  (size
+    [this]
+    (count @stack)))
+
+;;
+(import 'crack.stacks_and_queues.Stack)
+
+(defn stack
+  []
+  (Stack. (atom '()))
+  )
+
+(deftype StackOfStacks [stacks stack-limit]
+  PStack
+  (push
+    [this x]
+    (let [topstack (.peek @stacks)
+          hotstack (if (or (nil? topstack) (= stack-limit (.size topstack)))
+                     (stack)
+                     (.pop @stacks))]
+      (.push hotstack x)
+      (.push @stacks hotstack)))
+  (pop
+    [this]
+    (if (nil? (.peek @stacks))
+      nil
+      (let [ret (.pop (.peek @stacks))]
+        (if (= 0 (.size (.peek @stacks)))
+          (.pop @stacks))
+        ret)))
+  (peek
+    [this]
+    (if-not (nil? (.peek @stacks))
+      (.peek (.peek @stacks))
+      nil))
+  (size
+    [this]
+    (let [sstacksize (.size @stacks)
+          capacity (* sstacksize stack-limit)
+          topstack (.peek @stacks)
+          remaining (if (nil? topstack) 0 (- stack-limit (.size topstack)))]
+      (- capacity remaining)
+    ))
+  )
+
+;;
+(import 'crack.stacks_and_queues.StackOfStacks)
+
+(defn sstack
+  [stack-limit]
+  (StackOfStacks. (atom (stack)) stack-limit)
+  )
+
+;; problems
 (defn p3-1
   "Describe how you could use a single array to implement three stacks."
   []
@@ -13,40 +87,6 @@ O(1) time."
   []
   "Store current min with each element on the stack"
   )
-
-(defprotocol PStack
-  (push [this v])
-  (pop [this])
-  (peek [this]))
-
-(deftype Stack [stacks]
-  PStack
-  (push
-    [this x]
-    (swap! stacks conj x))
-  (pop
-    [this]
-    (let [first (first @stacks)]
-      (swap! stacks rest)
-      first))
-  (peek
-    [this]
-    (first @stacks)))
-
-(deftype StackOfStacks [stacks]
-  PStack
-  (push
-    [this x]
-    (swap! stacks conj x))
-  (pop
-    [this]
-    (let [first (first @stacks)]
-      (swap! stacks rest)
-      first))
-  (peek
-    [this]
-    (first @stacks)))
-
 
 (defn p3-3
   "Imagine a (literal) stack of plates. If the stack gets too high, it might topple. There-

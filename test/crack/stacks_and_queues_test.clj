@@ -1,22 +1,43 @@
 (ns crack.stacks_and_queues-test
-  (:import (crack.stacks_and_queues StackOfStacks))
+  (:import (crack.stacks_and_queues Stack StackOfStacks))
   (:use clojure.test
         crack.stacks_and_queues))
 
 (deftest a-test
   (testing "ch.3: stacks and queues"
-    ; StackOfStacks
-    (let [ss (StackOfStacks. (atom '()))]
+    ;; Stack
+    (let [s (stack)]
+      (.push s 1)
+      (.push s 5)
+      (.push s 13)
+      (is (= 3 (.size s)))
+      (is (= 13 (.peek s)))
+      (is (= 13 (.pop s)))
+      (is (= 5 (.peek s)))
+      (is (= 5 (.pop s)))
+      (is (= 1 (.peek s)))
+      (is (= 1 (.pop s)))
+      (is (= nil (.peek s)))
+      (is (= nil (.pop s)))
+      )
+    ;; StackOfStacks
+    (let [ss (sstack 2)]
       (.push ss 1)
-      (.push ss 5)
-      (.push ss 13)
-      (is (= 13 (.peek ss)))
-      (is (= 13 (.pop ss)))
-      (is (= 5 (.peek ss)))
-      (is (= 5 (.pop ss)))
       (is (= 1 (.peek ss)))
+      (.push ss 5)
+      (is (= 5 (.peek ss)))
+      (.push ss 13)
+      (is (= 3 (.size ss)))
+      (.push ss 9)
+      (.push ss 8)
+      (is (= 5 (.size ss)))
+      (is (= 8 (.pop ss)))
+      (is (= 9 (.pop ss)))
+      (is (= 13 (.pop ss)))
+      (is (= 5 (.pop ss)))
       (is (= 1 (.pop ss)))
       (is (= nil (.peek ss)))
       (is (= nil (.pop ss)))
-      )))
-
+      (is (= 0 (.size ss)))
+      )
+    ))
