@@ -6,11 +6,10 @@
   (pop [this])
   (peek [this])
   (size [this])
-  (popAt [this i])
   )
 
-;;(defprotocol PoppableByIndex
-;;  (popAt [this i]))
+(defprotocol PoppableByIndex
+  (popAt [this i]))
 
 (deftype Stack [stack]
   PStack
@@ -28,9 +27,10 @@
   (size
     [this]
     (count @stack))
-  (popAt
-    [this i]
-    nil)
+  Object
+  (toString
+    [this]
+    (.toString @stack))
   )
 
 ;;
@@ -73,7 +73,7 @@
           remaining (if (nil? topstack) 0 (- stack-limit (.size topstack)))]
       (- capacity remaining)
     ))
-  ;; PoppableByIndex  ;; p3-3b
+  PoppableByIndex  ;; p3-3b
   (popAt  ;; breaks .size
     [this i]
     (let [revstacks (stack)]
@@ -128,14 +128,15 @@ sub-stack."
   []
   (sstack 10))
 
+;; p3-4
 (defn hanoi
   [towers ls ld lt n]
   (if (= 1 n)
-    (.push (ls towers) (.pop (ld towers)))
-    (
+    (.push (ld towers) (.pop (ls towers)))
+    (do
       (hanoi towers ls lt ld (- n 1))
-      (.push (ls towers) (.pop (ld towers)))
-      (hanoi towers ls lt ld (- n 1))
+      (.push (ld towers) (.pop (ls towers)))
+      (hanoi towers lt ld ls (- n 1))
       )
     ))
 
@@ -149,8 +150,12 @@ have the following constraints:
 (C) A disk can only be placed on top of a larger disk.
 Write a program to move the disks from the first rod to the last using Stacks."
   []
-  (let [towers {:s (stack) :t (stack) :d (stack)}]
-    ())
+    (let [towers { :l (stack) :m (stack) :r (stack) }]
+      (.push (:l towers) 3)
+      (.push (:l towers) 2)
+      (.push (:l towers) 1)
+      (hanoi towers :l :r :m 3)
+      )
   )
 
 (defn p3-5
