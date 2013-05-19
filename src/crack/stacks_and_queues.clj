@@ -128,6 +128,17 @@ sub-stack."
   []
   (sstack 10))
 
+(defn hanoi
+  [towers ls ld lt n]
+  (if (= 1 n)
+    (.push (ls towers) (.pop (ld towers)))
+    (
+      (hanoi towers ls lt ld (- n 1))
+      (.push (ls towers) (.pop (ld towers)))
+      (hanoi towers ls lt ld (- n 1))
+      )
+    ))
+
 (defn p3-4
   "In the classic problem of the Towers of Hanoi, you have 3 rods and N disks of different
 sizes which can slide onto any tower. The puzzle starts with disks sorted in ascending
@@ -138,6 +149,8 @@ have the following constraints:
 (C) A disk can only be placed on top of a larger disk.
 Write a program to move the disks from the first rod to the last using Stacks."
   []
+  (let [towers {:s (stack) :t (stack) :d (stack)}]
+    ())
   )
 
 (defn p3-5
