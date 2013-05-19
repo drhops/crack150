@@ -20,7 +20,9 @@
       (is (= nil (.peek s)))
       (is (= nil (.pop s)))
       )
-    ;; p3.3 StackOfStacks
+    ;; p3-1
+    ;; p3-2
+    ;; p3-3 StackOfStacks
     (let [ss (sstack 2)]
       (.push ss 1)
       (is (= 1 (.peek ss)))
@@ -50,7 +52,7 @@
       (is (= 9 (.popAt ss 1)))
       (is (= 5 (.popAt ss 2)))
       )
-    ;; p3.3b StackOfStacks
+    ;; p3-4 Hanoi
     (let [towers { :l (stack) :m (stack) :r (stack) }]
       (.push (:l towers) 5)
       (.push (:l towers) 4)
@@ -70,5 +72,32 @@
       (is (= 4 (.pop (:r towers))))
       (is (= 5 (.pop (:r towers))))
       (is (= nil (.pop (:r towers))))
+      )
+    ;; p3-5 Queue from Stacks
+    (let [queue (myqueue)]
+      (.add queue 5)
+      (.add queue 8)
+      (.add queue 13)
+      (is (= 5 (.take queue)))
+      (is (= 8 (.take queue)))
+      (is (= 13 (.take queue)))
+      (is (= nil (.take queue)))
+      )
+    ;; p3-6
+    (let [stack (stack)]
+      (.push stack 3)
+      (.push stack 4)
+      (.push stack 5)
+      (.push stack 2)
+      (.push stack 7)
+      (print stack)
+      (p3-6 stack)
+      (print stack)
+      (is (= 2 (.pop stack)))
+      (is (= 3 (.pop stack)))
+      (is (= 4 (.pop stack)))
+      (is (= 5 (.pop stack)))
+      (is (= 7 (.pop stack)))
+      (is (= nil (.pop stack)))
       )
     ))

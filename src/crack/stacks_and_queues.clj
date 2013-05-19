@@ -41,6 +41,21 @@
   (Stack. (atom '()))
   )
 
+;; problems
+(defn p3-1
+  "Describe how you could use a single array to implement three stacks."
+  []
+  "Split the array into three arrays of length N/3"
+  )
+
+(defn p3-2
+  "How would you design a stack which, in addition to push and pop, also has a function
+min which returns the minimum element? Push, pop and min should all operate in
+O(1) time."
+  []
+  "Store current min with each element on the stack"
+  )
+
 ;; p3-3
 (deftype StackOfStacks [stacks stack-limit]
   PStack
@@ -85,28 +100,12 @@
         ret)))
   )
 
-
 ;;
 (import 'crack.stacks_and_queues.StackOfStacks)
 
 (defn sstack
   [stack-limit]
   (StackOfStacks. (atom (stack)) stack-limit)
-  )
-
-;; problems
-(defn p3-1
-  "Describe how you could use a single array to implement three stacks."
-  []
-  "Split the array into three arrays of length N/3"
-  )
-
-(defn p3-2
-  "How would you design a stack which, in addition to push and pop, also has a function
-min which returns the minimum element? Push, pop and min should all operate in
-O(1) time."
-  []
-  "Store current min with each element on the stack"
   )
 
 (defn p3-3
@@ -119,14 +118,14 @@ behave identically to a single stack (that is, pop() should return the same valu
 would if there were just a single stack).
 "
   []
-  (sstack 10))
+  "see StackOfStacks")
 
 (defn p3-3b
   "FOLLOW UP
 Implement a function popAt(int index) which performs a pop operation on a specific
 sub-stack."
   []
-  (sstack 10))
+  "see StackOfStacks")
 
 ;; p3-4
 (defn hanoi
@@ -158,14 +157,58 @@ Write a program to move the disks from the first rod to the last using Stacks."
       )
   )
 
+;; p3-5
+(defprotocol PQueue
+  (add [this v])
+  (take [this]))
+
+(deftype MyQueue [add-stack take-stack]
+  PQueue
+  (add
+    [this v]
+    (doseq [x (range 0 (.size take-stack))]
+      (.push add-stack (.pop take-stack)))
+    (.push add-stack v))
+  (take
+    [this]
+    (doseq [x (range 0 (.size add-stack))]
+      (.push take-stack (.pop add-stack)))
+    (.pop take-stack))
+  )
+
+;;
+(import 'crack.stacks_and_queues.MyQueue)
+
+(defn myqueue
+  []
+  (MyQueue. (stack) (stack))
+  )
+
 (defn p3-5
   "Implement a MyQueue class which implements a queue using two stacks."
   []
+  "see MyQueue"
   )
 
 (defn p3-6
   "Write a program to sort a stack in ascending order. You should not make any assump-
 tions about how the stack is implemented. The following are the only functions that
 should be used to write this program: push | pop | peek | isEmpty."
-  []
+  [s]
+  (let [srev (stack)]
+    (loop [n (.size s)]  ;; bubble sort (O(n^2))
+      (doseq [i (range 1 n)]
+        (.push srev (.pop s))
+        (if (> (.peek srev) (.peek s))
+          (let [x (.pop s)
+                y (.pop srev)]
+            (.push s y)
+            (.push srev x)
+            )))
+      (doseq [i (range 1 n)]
+        (.push s (.pop srev)))
+      (if (> n 1)
+        (recur (- n 1)))
+      ))
+  s
   )
