@@ -101,3 +101,5 @@
       (is (= nil (.pop stack)))
       )
     ))
+
+(run-tests)

@@ -3,26 +3,26 @@
 ;; data structures
 (defprotocol PTreeNode
   (children [this])
-  (setChildren [this children])
+  (set-children [this children])
   (size [this])
   )
 
-(deftype TreeNode [children]
+(deftype TreeNode [x-children]
   PTreeNode
-  (setChildren
-    [this newChildren]
-    (reset! children newChildren)
-    children)
+  (set-children
+    [this in-children]
+    (reset! x-children in-children)
+    @x-children)
   (children
     [this]
-    children)
+    @x-children)
   (size
     [this]
-    (count @children))
+    (count @x-children))
   Object
   (toString
     [this]
-    (.toString @children))
+    (.toString @x-children))
   )
 
 ;;
@@ -34,11 +34,21 @@
   )
 
 ;; problems
+(defn mindepth
+  "Returns minimum depth for a leaf node in the tree."
+  [tree depth]
+  (let [children (.children tree)]
+    (if (empty? children)
+      (+ depth 1)
+      (apply min (map
+            (fn [c] (mindepth c (+ depth 1)))
+            children))
+      )))
+
 (defn p4-1
   "Implement a function to check if a tree is balanced For the purposes of this question,
 a balanced tree is defined to be a tree such that no two leaf nodes differ in distance
 from the root by more than one."
-  []
-  (let [t (tree)]
-    (t size)
-  ))
+  [tree]
+  (mindepth tree 0)
+  )
