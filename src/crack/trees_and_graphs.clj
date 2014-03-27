@@ -34,14 +34,25 @@
   )
 
 ;; problems
-(defn mindepth
+(defn min-depth
   "Returns minimum depth for a leaf node in the tree."
   [tree depth]
   (let [children (.children tree)]
     (if (empty? children)
       (+ depth 1)
       (apply min (map
-            (fn [c] (mindepth c (+ depth 1)))
+            (fn [c] (min-depth c (+ depth 1)))
+            children))
+      )))
+
+(defn max-depth
+  "Returns maximum depth for a leaf node in the tree."
+  [tree depth]
+  (let [children (.children tree)]
+    (if (empty? children)
+      (+ depth 1)
+      (apply max (map
+            (fn [c] (max-depth c (+ depth 1)))
             children))
       )))
 
@@ -50,5 +61,14 @@
 a balanced tree is defined to be a tree such that no two leaf nodes differ in distance
 from the root by more than one."
   [tree]
-  (mindepth tree 0)
-  )
+  (let [min (min-depth tree 0)
+        max (max-depth tree 0)
+        diff (- max min)]
+    (< diff 2)
+  ))
+
+(defn p4-2
+  "Given a directed graph, design an algorithm to find out whether there is a route
+  between two nodes"
+  [graph n1 n2]
+  true)
