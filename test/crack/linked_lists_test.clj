@@ -3,7 +3,7 @@
   (:use clojure.test
         crack.linked_lists))
 
-(deftest a-test
+(deftest linked-lists-test
   (testing "ch.2: linked lists"
     ; LLNode
     (let [ll1 (LLNode. 5)

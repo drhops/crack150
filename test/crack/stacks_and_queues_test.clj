@@ -3,7 +3,7 @@
   (:use clojure.test
         crack.stacks_and_queues))
 
-(deftest a-test
+(deftest stacks-queues-test
   (testing "ch.3: stacks and queues"
     ;; Stack
     (let [s (stack)]

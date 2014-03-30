@@ -3,12 +3,12 @@
   (:use clojure.test
         crack.trees_and_graphs))
 
-(deftest a-test
+(deftest trees-graphs-test
   (testing "ch.4: trees and graphs"
     ;; Tree
     (let [t (tree)]
-      (.set-children t (list 3 4 5))
-      (is (= 3 (.size t)))
+      (.set-children t (list (tree 3) (tree 4) (tree 5)))
+      (is (= 4 (.size t)))
       )
     ;; Graph
     (let [g (graph 5)]
@@ -24,6 +24,8 @@
       (.set-children t (list (tree) (tree) (tree)))
       (is (= 2 (min-depth t 0)))
       )
+    ;; de-dupe
+    (is (= [1 2 3 4 5] (de-dupe [1 2 2 2 3 3 3 4 5])))
     ;; p4-1
     (let [t1 (tree)
           t2a (tree)
@@ -47,6 +49,11 @@
       (is (= false (p4-2 g :5 :0)))
       (is (= true (p4-2 g :0 :1)))
       (is (= true (p4-2 g :0 :5)))
+      )
+    ;; p4-3
+    (let [t (p4-3 [1 2 3 3 4 4 5 6 7 7 7])]
+      (is (= 7 (.size t)))
+      (is (= true (p4-1 t)))
       )
   ))
 

@@ -8,7 +8,7 @@
 
 (set-current-implementation :vectorz)
 
-(deftest a-test
+(deftest arrays-strings-test
   (testing "ch.1: arrays and strings"
     ; p1-1
     (is (= false (p1-1 "test")))

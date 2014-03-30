@@ -8,7 +8,7 @@
   (size [this])
   )
 
-(deftype TreeNode [x-children]
+(deftype TreeNode [m-value x-children]
   PTreeNode
   (set-children
     [this in-children]
@@ -19,11 +19,11 @@
     @x-children)
   (size
     [this]
-    (count @x-children))
+    (reduce + 1 (map size (remove nil? @x-children))))
   Object
   (toString
     [this]
-    (.toString @x-children))
+    (str m-value (.toString @x-children)))
   )
 
 (defprotocol PGraphNode
@@ -64,9 +64,8 @@
 (import 'crack.trees_and_graphs.TreeNode)
 
 (defn tree
-  []
-  (TreeNode. (atom '()))
-  )
+  ([value] (TreeNode. value (atom '())))
+  ([] (tree nil)))
 
 (import 'crack.trees_and_graphs.GraphNode)
 
@@ -80,7 +79,7 @@
 (defn min-depth
   "Returns minimum depth for a leaf node in the tree."
   [tree depth]
-  (let [children (.children tree)]
+  (let [children (remove nil?(.children tree))]
     (if (empty? children)
       (+ depth 1)
       (apply min (map
@@ -91,7 +90,7 @@
 (defn max-depth
   "Returns maximum depth for a leaf node in the tree."
   [tree depth]
-  (let [children (.children tree)]
+  (let [children (remove nil? (.children tree))]
     (if (empty? children)
       (+ depth 1)
       (apply max (map
@@ -110,17 +109,21 @@ from the root by more than one."
     (< diff 2)
   ))
 
-(defn lazy-contains? [col key]
+(defn lazy-contains?
+  "Returns true if the lazy sequence contains <key>."
+  [col key]
   (some #(= key %) col))
 
 (defn search
-  [graph queue node limit]
+  "Searches the graph starting from sources for target.
+  Will recurse at most <limit> times."
+  [graph sources target limit]
   (if (= limit 0)
     false
-    (let [edge-nodes (apply union (map (fn [x] (.edge-nodes graph x)) queue))]
-      (if (lazy-contains? edge-nodes node)
+    (let [edge-nodes (apply union (map (fn [x] (.edge-nodes graph x)) sources))]
+      (if (lazy-contains? edge-nodes target)
         true
-        (recur graph edge-nodes node (- limit 1))))
+        (recur graph edge-nodes target (- limit 1))))
     ))
 
 (defn p4-2
@@ -129,3 +132,34 @@ from the root by more than one."
   [graph source target]
   (search graph [source] target (num-vertices graph))
   )
+
+(defn de-dupe
+  "Removes consecutive duplicates (e.g. [1,2,2,3] => [1,2,3])."
+  [a]
+  (reduce (fn [a b] (if (= (last a) (first b))
+                      a; ignore b
+                      (conj a (first b))))
+          (map (fn [x] [x]) a)))
+
+(defn make-tree
+  ""
+  [values]
+  (if (empty? values)
+    nil
+    (let [a values
+          n (count a)
+          mid (int (/ n 2))
+          smaller (subvec a 0 mid)
+          bigger (subvec a (+ mid 1) n)
+          node (tree (get a mid))
+          left (make-tree smaller)
+          right (make-tree bigger)]
+      (.set-children node [left right])
+      node
+      )))
+
+(defn p4-3
+  "Given a sorted (increasing order) array, write an algorithm to create a binary tree with
+  minimal height"
+  [values]
+  (make-tree (de-dupe values)))
