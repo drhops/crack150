@@ -1,4 +1,5 @@
 (ns crack.trees_and_graphs)
+(use 'clojure.set)
 
 ;; data structures
 (defprotocol PTreeNode
@@ -25,6 +26,40 @@
     (.toString @x-children))
   )
 
+(defprotocol PGraphNode
+  (is-edge [this n1 n2])
+  (num-vertices [this])
+  (edges [this])
+  (edge-nodes [this n])
+  (add-edges [this in-edges])
+  )
+
+(deftype GraphNode [x-edges]
+  PGraphNode
+  (is-edge
+   [this n1 n2]
+   (contains? (get @x-edges n1) n2))
+  (edge-nodes
+   [this n]
+   (get @x-edges n))
+  (add-edges
+   [this in-edges]
+   (swap! x-edges into (map (fn [x] (let [k (first x)
+                                          k-edges (get @x-edges k)]
+                                      [k (apply conj k-edges (rest x))]))
+                            in-edges)))
+  (edges
+   [this]
+   @x-edges)
+  (num-vertices
+   [this]
+   (count (keys @x-edges)))
+  Object
+  (toString
+    [this]
+    (.toString @x-edges))
+  )
+
 ;;
 (import 'crack.trees_and_graphs.TreeNode)
 
@@ -32,6 +67,14 @@
   []
   (TreeNode. (atom '()))
   )
+
+(import 'crack.trees_and_graphs.GraphNode)
+
+(defn graph
+  [num-vertices]
+  (GraphNode. (atom (into {}
+                          (map (fn [x] [(keyword (str x)) #{}]) (range num-vertices))))
+  ))
 
 ;; problems
 (defn min-depth
@@ -67,8 +110,22 @@ from the root by more than one."
     (< diff 2)
   ))
 
+(defn lazy-contains? [col key]
+  (some #(= key %) col))
+
+(defn search
+  [graph queue node limit]
+  (if (= limit 0)
+    false
+    (let [edge-nodes (apply union (map (fn [x] (.edge-nodes graph x)) queue))]
+      (if (lazy-contains? edge-nodes node)
+        true
+        (recur graph edge-nodes node (- limit 1))))
+    ))
+
 (defn p4-2
   "Given a directed graph, design an algorithm to find out whether there is a route
   between two nodes"
-  [graph n1 n2]
-  true)
+  [graph source target]
+  (search graph [source] target (num-vertices graph))
+  )
