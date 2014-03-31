@@ -55,6 +55,10 @@
       (is (= 7 (.size t)))
       (is (= true (p4-1 t)))
       )
+    ;; p4-4
+    (let [t (p4-3 [1 2 3 3 4 4 5 6 7 7 7])]
+      (is (= (list (list 4) (list 2 6) (list 1 3 5 7)) (p4-4 t)))
+      )
   ))
 
 (run-tests)

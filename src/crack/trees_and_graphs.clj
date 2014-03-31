@@ -3,6 +3,7 @@
 
 ;; data structures
 (defprotocol PTreeNode
+  (value [this])
   (children [this])
   (set-children [this children])
   (size [this])
@@ -14,6 +15,9 @@
     [this in-children]
     (reset! x-children in-children)
     @x-children)
+  (value
+   [this]
+   m-value)
   (children
     [this]
     @x-children)
@@ -142,7 +146,7 @@ from the root by more than one."
           (map (fn [x] [x]) a)))
 
 (defn make-tree
-  ""
+  "Make a binary search tree from an array of values."
   [values]
   (if (empty? values)
     nil
@@ -163,3 +167,19 @@ from the root by more than one."
   minimal height"
   [values]
   (make-tree (de-dupe values)))
+
+(defn get-lists
+  "Get lists for the values at each depth."
+  [tree]
+  (if (nil? tree) (list)
+    (let [node tree
+          children (.children tree)
+          left (get-lists (first children))
+          right (get-lists (second children))]
+      (remove empty? (concat (list (list (.value node))) (map concat left right))))))
+
+(defn p4-4
+  "Given a binary search tree, design an algorithm which creates a linked list of all the
+  nodes at each depth (i e , if you have a tree with depth D, you’ll have D linked lists)"
+  [tree]
+  (get-lists tree))
