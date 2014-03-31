@@ -187,7 +187,7 @@ Write a program to move the disks from the first rod to the last using Stacks."
 (defn p3-5
   "Implement a MyQueue class which implements a queue using two stacks."
   []
-  "see MyQueue"
+  "See MyQueue"
   )
 
 (defn p3-6

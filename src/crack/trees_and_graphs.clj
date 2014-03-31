@@ -183,3 +183,39 @@ from the root by more than one."
   nodes at each depth (i e , if you have a tree with depth D, you’ll have D linked lists)"
   [tree]
   (get-lists tree))
+
+(defn p4-5
+  "Write an algorithm to find the ‘next’ node (i e , in-order successor) of a given node in
+  a binary search tree where each node has a link to its parent."
+  []
+  "Algorithm:
+  If: there is a right child, return the smallest node in the right sub-tree.
+  Else: go up until we are a left branch, and return that node.
+  Else: we are the biggest node and there is no 'next'.
+  ")
+
+(defn p4-6
+  "Design an algorithm and write code to find the first common ancestor of two nodes
+  in a binary tree Avoid storing additional nodes in a data structure NOTE: This is not
+  necessarily a binary search tree."
+  []
+  "A1 -- O(n) time, O(1) space:
+  Recursively search left and right side for both nodes simultaneously.
+  When one is found on each side, that is the first common ancestor.
+  A2 -- O(n) time, O(logn) space for balanced tree
+  Trace path for both nodes and compare to see where they diverge.")
+
+(defn p4-7
+  "You have two very large binary trees: T1, with millions of nodes, and T2, with hun-
+  dreds of nodes Create an algorithm to decide if T2 is a subtree of T1."
+  []
+  "A1 -- O(n+m): If T2 is a substring of T1 for both in-order and pre-order traversals.
+   A2 -- O(n*m): Brute-force search every node of T2 for every node of T1.")
+
+(defn p4-8
+  "You are given a binary tree in which each node contains a value. Design an algorithm
+  to print all paths which sum up to that value. Note that it can be any path in the tree
+  - it does not have to start at the root."
+  []
+  "A -- O(nlogn): Search the entire tree, at each node compute all sums starting at that node going up."
+  )
