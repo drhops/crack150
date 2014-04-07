@@ -41,3 +41,5 @@
     (is (= true (p1-8 "erbottlewat" "waterbottle")))
     (is (= false (p1-8 "xerbottlewat" "waterbottle")))
     ))
+
+(run-tests)
